@@ -78,10 +78,15 @@ class _ImgPreviewState extends State<ImgPreview> {
         handlerSaveImg(haveDataBase64 ? imgBase64Decode : widget.file);
         break;
       case 1: 
-        handlerSendImg({
-          'file': widget.file,
-          'effect': effect
-        });
+        if(!haveDataBase64){
+
+          handlerSendImg({
+            'file': widget.file,
+            'effect': effect
+          });
+        } else {
+          Navigator.pop(context);
+        }
         break;
     }
   }
@@ -161,16 +166,52 @@ class _ImgPreviewState extends State<ImgPreview> {
                       ],
                     ),
                     Container(
-                      height: 100,
-                      color: Colors.amber,
+                      height: 200,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Container(
+                            width: 300,
+                            color: Colors.amber,
+                          ),
+                          Container(
+                            width: 300,
+                            color: Color.fromARGB(255, 4, 110, 61),
+                          ),
+                          Container(
+                            width: 300,
+                            color: Color.fromARGB(255, 108, 2, 156),
+                          )
+
+                        ],
+                      ),
                     ),
-                    Container(
-                      height: 100,
-                      color: Color.fromARGB(255, 4, 110, 61),
-                    )
+                    // ListView(
+                    //   padding: const EdgeInsets.all(8),
+                    //   children:[
+                    //     Container(
+                    //       decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+                    //       height: 300,
+                    //       color: const Color.fromARGB(255, 7, 238, 255),
+                    //     ),
+                    //         Container(
+                    //                                     decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+
+                    //       height: 300,
+                    //       color: const Color.fromARGB(255, 7, 238, 255),
+                    //     ),
+                    //     Container(
+                    //                                 decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+
+                    //       height: 300,
+                    //       color: const Color.fromARGB(255, 7, 238, 255),
+                    //     ),
+                    //   ],
+                    // ),
+                    
                   ],
                 ),
-                if(true)
+                if(loadingImg)
                   Center(
                     child: Container(
                       height: 50,
@@ -207,10 +248,17 @@ class _ImgPreviewState extends State<ImgPreview> {
             icon: Icon(Icons.save_alt_rounded, color: Colors.blue[600]),
             label: ''
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.send_sharp, color: Colors.blue[600],),
-            label: '',
-          ),
+          if(!haveDataBase64)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.send_sharp, color: Colors.blue[600],),
+              label: '',
+            ),
+
+          if(haveDataBase64)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera_alt_rounded, color: Colors.blue[600],),
+              label: '',
+            ),
         ]
       ),
     );

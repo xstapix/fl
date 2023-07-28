@@ -37,11 +37,12 @@ class MyCamera extends StatefulWidget {
 
 class _MyCameraState extends State<MyCamera> {
   late CameraController _controller;
+  var selectedCamera = 0;
 
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(cameras[0], ResolutionPreset.max);
+    _controller = CameraController(cameras[selectedCamera], ResolutionPreset.max);
     _controller.initialize().then((_) {
       if(mounted) {
          setState(() {});
@@ -55,42 +56,80 @@ class _MyCameraState extends State<MyCamera> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             width: double.infinity,
             height: 500,
             child: CameraPreview(_controller),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Center(
+              Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: const InkWell(
+                  child: Icon(Icons.camera, weight: 50, color: const Color.fromARGB(255, 255, 255, 255),),
+                )
+              ),
+              InkWell(
                 child: Container(
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 0, 75, 214),
+                    color: Colors.blue[600],
                     borderRadius: BorderRadius.circular(20)
                   ),
-                  child: InkWell(
-                    child: Icon(Icons.camera, weight: 50, color: Colors.white,),
-                    onTap: () async {
-                      await _controller.setFlashMode((FlashMode.auto));
-                      XFile file = await _controller.takePicture();
-              
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (context) => ImgPreview(file))
-                      );
-                    },
-                  )
+                  child: const Icon(Icons.camera, weight: 50, color: Colors.white,),
                 ),
+                onTap: () async {
+                  await _controller.setFlashMode((FlashMode.auto));
+                  XFile file = await _controller.takePicture();
+          
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => ImgPreview(file))
+                  );
+                },
               ),
+              InkWell(
+                child:  Container(
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[600],
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  child: const Icon(Icons.autorenew_rounded, weight: 50, color: Colors.white,),
+                ),
+                onTap: () {
+                  setState(() {
+                    if (selectedCamera == 0) {
+                      selectedCamera = 1;
+                    } else {
+                      selectedCamera = 0;
+                    }
+
+                    _controller = CameraController(cameras[selectedCamera], ResolutionPreset.max);
+                    _controller.initialize().then((_) {
+                      if(mounted) {
+                        setState(() {});
+                      }
+
+                    });
+                  });
+                },
+              )
             ],
           )
         ],
-      ),
+      )
     );
   }
 }
