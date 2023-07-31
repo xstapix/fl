@@ -4,16 +4,19 @@ import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:camera/camera.dart';
+
 import '../shared/api.dart';
+import '../shared/myDrawer.dart';
 
 class ImgPreview extends StatefulWidget {
   ImgPreview(this.file, {super.key});
-  XFile file;
+  var file;
 
   @override
   State<ImgPreview> createState() => _ImgPreviewState();
@@ -26,6 +29,7 @@ class _ImgPreviewState extends State<ImgPreview> {
   bool normal_map_bool = false;
   bool lineart_bool = false;
   bool loadingImg = false;
+  int selectedScreen = 0;
 
   void handlerSendImg(file) async {
     setState(() {
@@ -94,173 +98,173 @@ class _ImgPreviewState extends State<ImgPreview> {
   @override
   Widget build(BuildContext context) {
     File pic = File(widget.file.path);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Photo preview'),
-      ),
-      body: ListView(
+      appBar: AppBar(),
+      drawer: MyDrawer(),
+      body: Stack(
         children: [
-          if(haveDataBase64)
-            Container(
-              height: MediaQuery.of(context).size.height / 1.4,
-              child: Image.memory(imgBase64Decode),
-            ),
-          if(!haveDataBase64)
-            Stack(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 1.4,
-                      child: Image.file(pic)
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: lineart_bool, 
-                          onChanged: (newBool) {
-                            setState(() {
-                              effect = 'lineart';
-                              lineart_bool = newBool!;
-                            });
-                          }
+          ListView(
+            children: [
+              Stack(
+                children: [
+                  Column(
+                    children: [
+                      if(!haveDataBase64)
+                        Container(
+                          height: MediaQuery.of(context).size.height / 1.4,
+                          child: Image.file(pic)
                         ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              effect = 'lineart';
-                              lineart_bool ? lineart_bool = false : lineart_bool = true;
-                            });
-                          },
-                          child: const Text(
-                            'lineart',
-                            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 13.0),
-                          ),
+                      if(haveDataBase64)
+                        Container(
+                          height: MediaQuery.of(context).size.height / 1.4,
+                          child: Image.memory(imgBase64Decode),
                         ),
-              
-                      ]
-                    ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: normal_map_bool, 
-                          onChanged: (newBool) {
-                            setState(() {
-                              effect = 'normal_map';
-                              normal_map_bool = newBool!;
-                            });
-                          }
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              effect = 'normal_map';
-                              normal_map_bool ? normal_map_bool = false : normal_map_bool = true;
-                            });
-                          },
-                          child: const Text(
-                            'normal_map',
-                            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 13.0),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      height: 200,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Container(
-                            width: 300,
-                            color: Colors.amber,
-                          ),
-                          Container(
-                            width: 300,
-                            color: Color.fromARGB(255, 4, 110, 61),
-                          ),
-                          Container(
-                            width: 300,
-                            color: Color.fromARGB(255, 108, 2, 156),
-                          )
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        height: 200,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                effect = 'lineart';
 
-                        ],
+                                handlerSendImg({
+                                  'file': widget.file,
+                                  'effect': effect
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right: 5),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(image: AssetImage("images/m.jpg"), fit: BoxFit.cover),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: effect == 'lineart' ? Colors.green : Colors.black, 
+                                        width: effect == 'lineart' ? 4 : 0
+                                      ),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color.fromARGB(103, 255, 255, 255),
+                                          Color.fromARGB(192, 0, 0, 0)
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      )
+                                    ),
+                                    width: 300,
+                                    child: const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Spacer(),
+                                        Text('Lineart', style: TextStyle(color: Colors.white, fontSize: 40),)
+                                      ]
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ),
+                            InkWell(
+                              onTap: () {
+                                effect = 'normal_map';
+
+                                handlerSendImg({
+                                  'file': widget.file,
+                                  'effect': effect
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right: 5),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(image: AssetImage("images/m.jpg"), fit: BoxFit.cover),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: effect == 'normal_map' ? Colors.green : Colors.black, 
+                                        width: effect == 'normal_map' ? 4 : 0
+                                      ),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color.fromARGB(103, 255, 255, 255),
+                                          Color.fromARGB(192, 0, 0, 0)
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      )
+                                    ),
+                                    width: 300,
+                                    child: const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Spacer(),
+                                        Text('Normal_map', style: TextStyle(color: Colors.white, fontSize: 40),)
+                                      ]
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ),
+                            Container(
+                              width: 300,
+                              color: Color.fromARGB(255, 108, 2, 156),
+                            )
+
+                          ],
+                        ),
                       ),
-                    ),
-                    // ListView(
-                    //   padding: const EdgeInsets.all(8),
-                    //   children:[
-                    //     Container(
-                    //       decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-                    //       height: 300,
-                    //       color: const Color.fromARGB(255, 7, 238, 255),
-                    //     ),
-                    //         Container(
-                    //                                     decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-
-                    //       height: 300,
-                    //       color: const Color.fromARGB(255, 7, 238, 255),
-                    //     ),
-                    //     Container(
-                    //                                 decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-
-                    //       height: 300,
-                    //       color: const Color.fromARGB(255, 7, 238, 255),
-                    //     ),
-                    //   ],
-                    // ),
-                    
-                  ],
-                ),
-                if(loadingImg)
-                  Center(
-                    child: Container(
-                      height: 50,
-                      color: Colors.blue[600],
-                      alignment: Alignment.center,
-                      child: Text("Loading...", style: TextStyle(color: Colors.white),)
-                    ),
-                  )
-              ]
+                    ],
+                  ),
+                ]
+              ),
+            ],
+          ),
+          if(loadingImg) 
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Color.fromARGB(83, 0, 0, 0),
             ),
+          if(loadingImg)
+            const AlertDialog(
+              title: Text('Loading...'),
+              content: Text('Please wait'),
+            )
         ],
-      ),
-      // Column(
-      //   children: [
-      //     if(haveDataBase64)
-      //       Center(
-      //         child: Image.memory(base64Decode(dataBase64)),
-      //       ),
+      ) 
+      
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   showSelectedLabels: false,
+      //   showUnselectedLabels: false,
+      //   landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+      //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      //   onTap: (index) {handlerBar(index);},
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.save_alt_rounded, color: Colors.blue[600]),
+      //       label: ''
+      //     ),
       //     if(!haveDataBase64)
-      //       Center(
-      //         child: Image.file(pic)
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.send_sharp, color: Colors.blue[600],),
+      //         label: '',
+      //       ),
+
+      //     if(haveDataBase64)
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.camera_alt_rounded, color: Colors.blue[600],),
+      //         label: '',
       //       ),
       //   ]
       // ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        onTap: (index) {handlerBar(index);},
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.save_alt_rounded, color: Colors.blue[600]),
-            label: ''
-          ),
-          if(!haveDataBase64)
-            BottomNavigationBarItem(
-              icon: Icon(Icons.send_sharp, color: Colors.blue[600],),
-              label: '',
-            ),
-
-          if(haveDataBase64)
-            BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt_rounded, color: Colors.blue[600],),
-              label: '',
-            ),
-        ]
-      ),
     );
   }
 }

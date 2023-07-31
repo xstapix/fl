@@ -8,6 +8,32 @@ import 'package:http/http.dart' as http;
 var _url = 'https://app.rocketai.ru';
 String _publicToken = 'dX633jpLpxqVY5cuePqI50FrvyOix5HprsILrV6Sq1Jzh9yoCR0nIm3dYw7nmYBXRghDGLMZx5mBjWj1mYBh1260yrZhnrD6Ipq0woAuZNg8B0jTYC30anHntH4U2Y2iFQXlQFLJS3NrYCFmfqkvPfZ3lavzi3QxTfcNcwGgdiNHa8ZuxPhTWBEFtsTOzW8GoRJBPagY3s8wpWb9C7Y5P6CUcDdnDHwkc0qQaUQEfqHqqHh5DEvpmwgk2wFTbr2';
 
+Future getGallery () async {
+  // final response = await http.get(
+  //   Uri.parse('$_url/api/v1/gen/control-net'),
+  //   headers: {HttpHeaders.contentTypeHeader: 'application/json'},
+  // );
+  // final data = json.decode(response.body);
+
+  return [
+    {
+      'img': 'https://s0.rbk.ru/v6_top_pics/media/img/8/54/756578114959548.jpg'
+    },
+    {
+      'img': 'https://www.russiadiscovery.ru/storage/orig/posts/1038/Kavkazskie_gory.jpg'
+    },
+    {
+      'img': 'https://kipmu.ru/wp-content/uploads/mountain.jpg'
+    },
+    {
+      'img': 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Moench_2339.jpg/1200px-Moench_2339.jpg'
+    },
+    {
+      'img': 'https://kipmu.ru/wp-content/uploads/mountain.jpg'
+    }
+  ];
+}
+
 Future sendWork(obj) async {
   List<int> imageBytes = await obj['file'].readAsBytes();
   String base64Image = base64Encode(imageBytes);
