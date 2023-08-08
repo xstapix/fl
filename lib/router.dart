@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import './screen/ImgPreview.dart';
 import './screen/Camera.dart';
 import './screen/Gallery.dart';
+import './screen/DetailGallery.dart';
 
 final GoRouter router = GoRouter(
   routes: <GoRoute>[
@@ -23,6 +24,12 @@ final GoRouter router = GoRouter(
       path: '/gallery',
       builder: (BuildContext context, GoRouterState state) {
         return Gallery();
+      }
+    ),
+    GoRoute(
+      path: '/detail-gallery',
+      builder: (BuildContext context, GoRouterState state) {
+        return DetailGallery();
       }
     )
   ]

@@ -14,6 +14,8 @@ import 'package:camera/camera.dart';
 import '../shared/api.dart';
 import '../shared/myDrawer.dart';
 
+const String routePath = '/';
+
 class ImgPreview extends StatefulWidget {
   ImgPreview(this.file, {super.key});
   var file;
@@ -76,7 +78,7 @@ class _ImgPreviewState extends State<ImgPreview> {
     }
   } 
 
-  void handlerBar(index) async {
+  void handlerBar(index) {
     switch (index) {
       case 0:
         handlerSaveImg(haveDataBase64 ? imgBase64Decode : widget.file);
@@ -101,7 +103,9 @@ class _ImgPreviewState extends State<ImgPreview> {
 
     return Scaffold(
       appBar: AppBar(),
-      drawer: MyDrawer(),
+      drawer: MyDrawer(
+        path: routePath
+      ),
       body: Stack(
         children: [
           ListView(
@@ -239,32 +243,6 @@ class _ImgPreviewState extends State<ImgPreview> {
             )
         ],
       ) 
-      
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   showSelectedLabels: false,
-      //   showUnselectedLabels: false,
-      //   landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-      //   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      //   onTap: (index) {handlerBar(index);},
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.save_alt_rounded, color: Colors.blue[600]),
-      //       label: ''
-      //     ),
-      //     if(!haveDataBase64)
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.send_sharp, color: Colors.blue[600],),
-      //         label: '',
-      //       ),
-
-      //     if(haveDataBase64)
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.camera_alt_rounded, color: Colors.blue[600],),
-      //         label: '',
-      //       ),
-      //   ]
-      // ),
     );
   }
 }

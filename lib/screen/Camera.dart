@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../shared/myDrawer.dart';
 
 late List<CameraDescription> cameras;
+const String routePath = '/';
 
 class MyCamera extends StatefulWidget {
   const MyCamera({super.key});
@@ -18,7 +19,6 @@ class _MyCameraState extends State<MyCamera> {
   late CameraController _controller;
   bool initController = false;
   var selectedCamera = 0;
-  // int selectedScreen = 0;
 
   @override
     void initState() {
@@ -45,10 +45,13 @@ class _MyCameraState extends State<MyCamera> {
 
   @override
   Widget build(BuildContext context) {
+    
     return  
     Scaffold(
       appBar: AppBar(),
-      drawer: MyDrawer(),
+      drawer: MyDrawer(
+        path: routePath,
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
