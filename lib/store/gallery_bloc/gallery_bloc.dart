@@ -12,8 +12,7 @@ class GalleryBloc extends Bloc<GalleryEvents, GalleryState>{
 
   _onInit(GalleryInitEvent event, Emitter<GalleryState> emit) async {
     emit(GalleryLoadingState());
-    final images = await getGallery();
 
-    emit(GalleryLoadedState(images));
+    emit(GalleryLoadedState(event.images));
   }
 }

@@ -20,24 +20,21 @@ class Gallery extends StatefulWidget {
 
 class _GalleryState extends State<Gallery> {
   var gallery;
+  final galleryBloc = GalleryBloc();
+
+  @override
+  void initState() {
+    initGallery();
+  }
 
   // @override
-  // void initState() {
-  //   initGallery();
-  // }
-
-  // void initGallery() async {
-  //   var data = await getGallery();
-
-  //   setState(() {
-  //     gallery = data;
-  //   });
-  // }
+  void initGallery() async {
+    var data = await getGallery();
+    galleryBloc.add(GalleryInitEvent(data));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final galleryBloc = GalleryBloc();
-    galleryBloc.add(GalleryInitEvent());
 
     return Scaffold(
       appBar: AppBar(),
