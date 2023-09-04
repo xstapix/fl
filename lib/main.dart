@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './router.dart';
 import './store/gallery_bloc/gallery_bloc.dart';
+import 'screen/Camera.dart';
+import 'screen/Hello.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  prefs.remove('account');
+  var account = prefs.containsKey('account');
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => GalleryBloc()),
-      ], 
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
-      )
-    );
-  }
+  if (account)
+    router.go('/camera');
+  else
+    router.go('/');
+
+  Widget app = MaterialApp.router(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      fontFamily: 'Inter'
+    ),
+    routerConfig: router,
+  );
+
+  runApp(app);
 }
  

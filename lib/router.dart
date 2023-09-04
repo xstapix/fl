@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cam/screen/Hello.dart';
 import 'package:go_router/go_router.dart';
 
 import './screen/ImgPreview.dart';
@@ -10,6 +11,12 @@ final GoRouter router = GoRouter(
   routes: <GoRoute>[
     GoRoute(
       path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return Hello();
+      }
+    ),
+    GoRoute(
+      path: '/camera',
       builder: (BuildContext context, GoRouterState state) {
         return MyCamera();
       }
